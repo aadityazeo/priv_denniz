@@ -1,3 +1,6 @@
+on property:init.svc.face_hal=restarting
+    stop face_hal
+
 on boot
     # Disable edge limit control interface
     chmod 0660 /proc/touchpanel/oplus_tp_limit_enable
