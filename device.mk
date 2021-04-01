@@ -141,6 +141,10 @@ PRODUCT_PACKAGES += \
     RcsService \
     PresencePolling
 
+# Sensors
+PRODUCT_PACKAGES += \
+    android.hardware.sensors@2.0-service.oneplus_denniz
+
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(DEVICE_PATH)
