@@ -34,7 +34,10 @@
 #include <inttypes.h>
 #include <linux/input.h>
 #include <log/log.h>
+
 #include <map>
+
+
 #include <string.h>
 #include <sys/ioctl.h>
 #include <thread>
@@ -58,6 +61,7 @@ namespace vibrator {
 #define test_bit(bit, array)    ((array)[(bit)/8] & (1<<((bit)%8)))
 
 static const char LED_DEVICE[] = "/sys/class/leds/vibrator";
+
 
 static std::map<Effect, std::vector<std::pair<std::string, std::string>>> LED_EFFECTS{
     { Effect::CLICK, {
@@ -105,6 +109,7 @@ static std::map<Effect, std::vector<std::pair<std::string, std::string>>> LED_EF
         { "/sys/class/leds/vibrator/brightness", "1" },
     }}
 };
+
 
 InputFFDevice::InputFFDevice()
 {
@@ -487,6 +492,7 @@ ndk::ScopedAStatus Vibrator::perform(Effect effect, EffectStrength es, const std
     long playLengthMs;
     int ret;
 
+
     ALOGD("Vibrator perform effect %d", effect);
 
     if (ledVib.mDetected) {
@@ -523,6 +529,23 @@ ndk::ScopedAStatus Vibrator::perform(Effect effect, EffectStrength es, const std
             return ndk::ScopedAStatus(AStatus_fromExceptionCode(EX_SERVICE_SPECIFIC));
     }
 
+    if (ledVib.mDetected)
+        return ndk::ScopedAStatus(AStatus_fromExceptionCode(EX_UNSUPPORTED_OPERATION));
+
+    ALOGD("Vibrator perform effect %d", effect);
+
+    if (effect < Effect::CLICK ||
+            effect > Effect::HEAVY_CLICK)
+        return ndk::ScopedAStatus(AStatus_fromExceptionCode(EX_UNSUPPORTED_OPERATION));
+
+    if (es != EffectStrength::LIGHT && es != EffectStrength::MEDIUM && es != EffectStrength::STRONG)
+        return ndk::ScopedAStatus(AStatus_fromExceptionCode(EX_UNSUPPORTED_OPERATION));
+
+    ret = ff.playEffect((static_cast<int>(effect)), es, &playLengthMs);
+    if (ret != 0)
+        return ndk::ScopedAStatus(AStatus_fromExceptionCode(EX_SERVICE_SPECIFIC));
+
+
     if (callback != nullptr) {
         std::thread([=] {
             ALOGD("Starting perform on another thread");
@@ -537,12 +560,20 @@ ndk::ScopedAStatus Vibrator::perform(Effect effect, EffectStrength es, const std
 }
 
 ndk::ScopedAStatus Vibrator::getSupportedEffects(std::vector<Effect>* _aidl_return) {
+
     if (ledVib.mDetected) {
         *_aidl_return = {Effect::CLICK, Effect::DOUBLE_CLICK, Effect::TICK, Effect::HEAVY_CLICK};
     } else {
         *_aidl_return = {Effect::CLICK, Effect::DOUBLE_CLICK, Effect::TICK, Effect::THUD,
                          Effect::POP, Effect::HEAVY_CLICK};
     }
+=======
+    if (ledVib.mDetected)
+        return ndk::ScopedAStatus::ok();
+
+    *_aidl_return = {Effect::CLICK, Effect::DOUBLE_CLICK, Effect::TICK, Effect::THUD,
+                     Effect::POP, Effect::HEAVY_CLICK};
+
 
     return ndk::ScopedAStatus::ok();
 }
