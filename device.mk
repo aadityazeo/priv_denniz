@@ -86,8 +86,8 @@ PRODUCT_PACKAGES += \
     Tag
 
 # NFC
-PRODUCT_SOONG_NAMESPACES += \
-    vendor/nxp/opensource/sn100x
+#PRODUCT_SOONG_NAMESPACES += \
+#    vendor/nxp/opensource/sn100x
 
 PRODUCT_PACKAGES += \
     NfcNci \
