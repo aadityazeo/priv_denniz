@@ -26,6 +26,10 @@ TARGET_SCREEN_WIDTH := 1080
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 
+# Alert slider
+PRODUCT_PACKAGES += \
+    oplus-alert-slider
+
 # Audio
 PRODUCT_PACKAGES += \
     audio.a2dp.default
