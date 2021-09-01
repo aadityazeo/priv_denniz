@@ -61,10 +61,14 @@ DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay \
     $(LOCAL_PATH)/overlay-lineage
 
+# Permissions
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/permissions/privapp-permissions-mediatek.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-mediatek.xml
+
 # RcsService
 PRODUCT_PACKAGES += \
     com.android.ims.rcsmanager \
-    PresencePolling 
+    PresencePolling
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
