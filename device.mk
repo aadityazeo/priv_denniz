@@ -63,3 +63,7 @@ PRODUCT_SOONG_NAMESPACES += \
 # Vendor overlay
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(LOCAL_PATH)/vendor_overlay/,$(TARGET_COPY_OUT_PRODUCT)/vendor_overlay/$(PRODUCT_TARGET_VNDK_VERSION))
+
+# Wi-Fi
+PRODUCT_PACKAGES += \
+    TetheringConfigOverlay
