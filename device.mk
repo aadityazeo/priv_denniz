@@ -28,7 +28,7 @@ PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 
 # Alert slider
 PRODUCT_PACKAGES += \
-    oplus-alert-slider
+    alert-slider_daemon
 
 # Audio
 PRODUCT_PACKAGES += \
