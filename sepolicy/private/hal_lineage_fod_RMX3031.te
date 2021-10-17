@@ -15,3 +15,6 @@ allow hal_lineage_fod_denniz sysfs_fod:file rw_file_perms;
 
 # Allow to use wakelock
 wakelock_use(hal_lineage_fod_denniz)
+
+# Allow sysfs to write
+allow hal_lineage_fod_denniz sysfs:file write;
