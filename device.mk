@@ -106,6 +106,13 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(LOCAL_PATH)/vendor_overlay/,$(TARGET_COPY_OUT_PRODUCT)/vendor_overlay/$(PRODUCT_TARGET_VNDK_VERSION))
 
+# Symbols
+PRODUCT_PACKAGES += \
+    libshim_vtservice
+
+PRODUCT_PACKAGES += \
+    ImsServiceBase
+
 # Wi-Fi
 PRODUCT_PACKAGES += \
     TetheringConfigOverlay \
