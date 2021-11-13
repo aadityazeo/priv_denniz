@@ -75,54 +75,63 @@ static const char LED_DEVICE[] = "/sys/class/leds/vibrator";
 static std::map<Effect, std::vector<std::pair<std::string, std::string>>> LED_EFFECTS{
     { Effect::CLICK, {
         { IGNORE_STORE_PATH, "0" },
-        { DURATION_PATH, "8" },
+        { DURATION_PATH, "60" },
         { VMAX_PATH, "0x1f" },
-        { GAIN_PATH, "0x70" },
-        { SEQ_PATH, "0x00 0x01" },
+        { GAIN_PATH, "0x96" },
+        { SEQ_PATH, "0x00 0x03" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
     }},
     { Effect::DOUBLE_CLICK, {
         { IGNORE_STORE_PATH, "0" },
-        { DURATION_PATH, "13" },
+        { DURATION_PATH, "80" },
         { VMAX_PATH, "0x1f" },
-        { GAIN_PATH, "0x80" },
-        { SEQ_PATH, "0x00 0x01" },
+        { GAIN_PATH, "0x96" },
+        { SEQ_PATH, "0x00 0x03" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
         { "SLEEP", "150" },
         { IGNORE_STORE_PATH, "0" },
-        { DURATION_PATH, "13" },
+        { DURATION_PATH, "75" },
         { VMAX_PATH, "0x1f" },
-        { GAIN_PATH, "0x80" },
-        { SEQ_PATH, "0x00 0x01" },
+        { GAIN_PATH, "0x96" },
+        { SEQ_PATH, "0x00 0x03" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
     }},
     { Effect::TICK, {
         { IGNORE_STORE_PATH, "0" },
-        { DURATION_PATH, "5" },
+        { DURATION_PATH, "30" },
         { VMAX_PATH, "0x1f" },
-        { GAIN_PATH, "0x29" },
-        { SEQ_PATH, "0x00 0x01" },
+        { GAIN_PATH, "0x80" },
+        { SEQ_PATH, "0x00 0x03" },
+        { LOOP_PATH, "0x00 0x00" },
+        { BRIGHTNESS_PATH, "1" },
+    }},
+    { Effect::THUD, {
+        { IGNORE_STORE_PATH, "0" },
+        { DURATION_PATH, "60" },
+        { VMAX_PATH, "0x1f" },
+        { GAIN_PATH, "0x96" },
+        { SEQ_PATH, "0x00 0x03" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
     }},
     { Effect::POP, {
         { IGNORE_STORE_PATH, "0" },
-        { DURATION_PATH, "13" },
+        { DURATION_PATH, "60" },
         { VMAX_PATH, "0x1f" },
-        { GAIN_PATH, "0x80" },
-        { SEQ_PATH, "0x00 0x04" },
+        { GAIN_PATH, "0x96" },
+        { SEQ_PATH, "0x00 0x03" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
     }},
     { Effect::HEAVY_CLICK, {
         { IGNORE_STORE_PATH, "0" },
-        { DURATION_PATH, "30" },
+        { DURATION_PATH, "100" },
         { VMAX_PATH, "0x1f" },
-        { GAIN_PATH, "0x80" },
-        { SEQ_PATH, "0x00 0x05" },
+        { GAIN_PATH, "0x96" },
+        { SEQ_PATH, "0x00 0x03" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
     }}
@@ -617,6 +626,7 @@ ndk::ScopedAStatus Vibrator::perform(Effect effect, EffectStrength es, const std
 }
 
 ndk::ScopedAStatus Vibrator::getSupportedEffects(std::vector<Effect>* _aidl_return) {
+<<<<<<< HEAD
 
     if (ledVib.mDetected) {
         *_aidl_return = {Effect::CLICK, Effect::DOUBLE_CLICK, Effect::TICK, Effect::POP,
@@ -632,6 +642,10 @@ ndk::ScopedAStatus Vibrator::getSupportedEffects(std::vector<Effect>* _aidl_retu
     *_aidl_return = {Effect::CLICK, Effect::DOUBLE_CLICK, Effect::TICK, Effect::THUD,
                      Effect::POP, Effect::HEAVY_CLICK};
 
+=======
+    *_aidl_return = {Effect::CLICK, Effect::DOUBLE_CLICK, Effect::TICK, Effect::THUD,
+            Effect::POP, Effect::HEAVY_CLICK};
+>>>>>>> 11f0f72... sm8250-common: vibrator: Update vibration effects
 
     return ndk::ScopedAStatus::ok();
 }
