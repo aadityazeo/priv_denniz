@@ -22,24 +22,16 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, device/oneplus/denniz/device.mk)
 
 # Inherit some common Pixel-Experience stuff.
-$(call inherit-product, vendor/aosp/config/common_full_phone.mk)
+$(call inherit-product, vendor/radiant/config/common_full_phone.mk)
 
 # Device identifier. This must come after all inclusions.
-PRODUCT_NAME := aosp_denniz
+PRODUCT_NAME := radiant_denniz
 PRODUCT_DEVICE := denniz
 PRODUCT_BRAND := oneplus
 PRODUCT_MODEL := oneplus Nord 2 5G
 PRODUCT_MANUFACTURER := oneplus
 
-# Gapps
-TARGET_GAPPS_ARCH := arm64
-IS_PHONE := true
-ANCIENT_GAPPS := true
 
-# Official-ify
-Elixir_MAINTAINER := hypercleric
-IS_PHONE := true
-CUSTOM_BUILD_TYPE := OFFICIAL
 TARGET_SUPPORTS_GOOGLE_RECORDER := false
 TARGET_INCLUDE_STOCK_ACORE := false
 TARGET_INCLUDE_LIVE_WALLPAPERS := false
