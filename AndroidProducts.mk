@@ -15,4 +15,4 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/ancient_denniz.mk
+    $(LOCAL_DIR)/radiant_denniz.mk
