@@ -156,3 +156,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     TetheringConfigOverlay \
     WifiOverlay
+
+#vibrator    
+    PRODUCT_PACKAGES += \
+    vendor.qti.hardware.vibrator.service.oneplus_kona
