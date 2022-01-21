@@ -1,4 +1,14 @@
 [
   {
+    "remote": "github",
+    "repository": "oneplus-mt6893-devs/android_hardware_oplus",
+    "target_path": "hardware/oplus",
+    "branch": "lineage-18.1"
+  },
+  {
+    "remote": "github",
+    "repository": "oneplus-mt6893-devs/android_kernel_oneplus_mt6893",
+    "target_path": "kernel/oneplus/mt6893",
+    "branch": "oneplus/MT6893_R_11.0"
   }
 ]
