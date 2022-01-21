@@ -10,5 +10,11 @@
     "repository": "oneplus-mt6893-devs/android_kernel_oneplus_mt6893",
     "target_path": "kernel/oneplus/mt6893",
     "branch": "oneplus/MT6893_R_11.0"
+  },
+  {
+    "remote": "github",
+    "repository": "oneplus-mt6893-devs/android_vendor_mediatek_ims",
+    "target_path": "vendor_mediatek_ims",
+    "branch": "master"
   }
 ]
