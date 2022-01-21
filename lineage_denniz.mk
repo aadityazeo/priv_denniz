@@ -14,6 +14,9 @@ $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 # Inherit from denniz device
 $(call inherit-product, device/oneplus/denniz/device.mk)
 
+# Inherit Mediatek IMS packages
+$(call inherit-product, vendor/mediatek/ims/mtk-ims.mk)
+
 PRODUCT_NAME := lineage_denniz
 PRODUCT_DEVICE := denniz
 PRODUCT_MANUFACTURER := OnePlus
