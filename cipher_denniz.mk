@@ -22,25 +22,25 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, device/oneplus/denniz/device.mk)
 
 # Inherit some common Pixel-Experience stuff.
-$(call inherit-product, vendor/radiant/config/common_full_phone.mk)
+$(call inherit-product, vendor/cipher/config/common_full_phone.mk)
 
 # Device identifier. This must come after all inclusions.
-PRODUCT_NAME := radiant_denniz
+PRODUCT_NAME := cipher_denniz
 PRODUCT_DEVICE := denniz
 PRODUCT_BRAND := oneplus
 PRODUCT_MODEL := oneplus Nord 2 5G
 PRODUCT_MANUFACTURER := oneplus
 
-# Gapps
-TARGET_GAPPS_ARCH := arm64
-IS_PHONE := true
-
+# Cipher stuff
+CIPHER_GAPPS := true
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+     ro.cipher.maintainer=AadityaZeo
 
 
 TARGET_BOOT_ANIMATION_RES := 1080
 
 # Build info
-BUILD_FINGERPRINT := "alps/vnd_oppo6893/oppo6893:11/RP1A.200720.011/mp2tc16sppr5V1:user/release-keys"
+BUILD_FINGERPRINT := "google/coral/coral:12/SQ1A.220105.002/7961164:user/release-keys"
 PRODUCT_BUILD_PROP_OVERRIDES += \
     TARGET_DEVICE=denniz \
     PRODUCT_NAME=denniz \
