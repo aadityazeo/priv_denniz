@@ -32,7 +32,8 @@ PRODUCT_PACKAGES += \
 
 # Init
 PRODUCT_PACKAGES += \
-    init.mt6893.rc
+    init.mt6893.rc \
+    init.recovery.mt6893.rc
 
 # Input
 PRODUCT_COPY_FILES += \
