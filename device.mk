@@ -78,10 +78,6 @@ PRODUCT_SOONG_NAMESPACES += \
 PRODUCT_COPY_FILES += \
     $(call find-copy-subdir-files,*,$(LOCAL_PATH)/vendor_overlay/,$(TARGET_COPY_OUT_PRODUCT)/vendor_overlay/$(PRODUCT_TARGET_VNDK_VERSION))
 
-# System prop
--include $(DEVICE_PATH)/system_prop.mk
-PRODUCT_COMPATIBLE_PROPERTY_OVERRIDE := true
-
 # Wi-Fi
 PRODUCT_PACKAGES += \
     TetheringConfigOverlay \
