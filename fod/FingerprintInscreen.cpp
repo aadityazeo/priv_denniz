@@ -26,7 +26,6 @@
 /* Hardcoded stuffs */
 #define FP_PRESS_PATH "/sys/kernel/oplus_display/oplus_notify_fppress"
 #define DIMLAYER_PATH "/sys/kernel/oplus_display/dimlayer_bl_en"
-#define HBM_PATH "/sys/kernel/oplus_display/hbm"
 #define X_POS 443
 #define Y_POS 2088
 #define FP_SIZE 194
@@ -36,14 +35,14 @@
 namespace {
 
 template <typename T>
-static void set(const std::string& path, const T& value) {
+static inline void set(const std::string& path, const T& value) {
     std::ofstream file(path);
     file << value;
-    LOG(INFO) << "wrote path: " << path << ", value: " << value << "\n";
+    //LOG(INFO) << "wrote path: " << path << ", value: " << value << "\n";
 }
 
 template <typename T>
-static T get(const std::string& path, const T& def) {
+static inline T get(const std::string& path, const T& def) {
     std::ifstream file(path);
     T result;
 
@@ -87,7 +86,6 @@ Return<void> FingerprintInscreen::onFinishEnroll() {
 Return<void> FingerprintInscreen::onPress() {
     mFingerPressed = true;
     set(DIMLAYER_PATH, FP_BEGIN);
-    set(HBM_PATH, FP_BEGIN);
     std::thread([this]() {
         std::this_thread::sleep_for(std::chrono::milliseconds(69));
         if (mFingerPressed) {
@@ -101,24 +99,24 @@ Return<void> FingerprintInscreen::onRelease() {
     mFingerPressed = false;
     set(FP_PRESS_PATH, FP_ENDIT);
     set(DIMLAYER_PATH, FP_ENDIT);
-    set(HBM_PATH, FP_ENDIT);
+    return Void();
+}
+
+Return<void> FingerprintInscreen::onShowFODView() {
     return Void();
 }
 
 Return<void> FingerprintInscreen::onHideFODView() {
-    set(HBM_PATH, FP_ENDIT);
     set(DIMLAYER_PATH, FP_ENDIT);
     set(FP_PRESS_PATH, FP_ENDIT);
     return Void();
 }
 
-Return<bool> FingerprintInscreen::handleAcquired(int32_t acquiredInfo, int32_t vendorCode) {
-    LOG(ERROR) << "acquiredInfo: " << acquiredInfo << ", vendorCode: " << vendorCode << "\n";
+Return<bool> FingerprintInscreen::handleAcquired(int32_t /* acquiredInfo */, int32_t /* vendorCode */) {
     return false;
 }
 
-Return<bool> FingerprintInscreen::handleError(int32_t error, int32_t vendorCode) {
-    LOG(ERROR) << "error: " << error << ", vendorCode: " << vendorCode << "\n";
+Return<bool> FingerprintInscreen::handleError(int32_t /* error */, int32_t /* vendorCode */) {
     return false;
 }
 
@@ -126,9 +124,8 @@ Return<void> FingerprintInscreen::setLongPressEnabled(bool) {
     return Void();
 }
 
-Return<int32_t> FingerprintInscreen::getDimAmount(int32_t brightness) {
-    return(int32_t)((brightness > 498) ? (255 * (1.0 - pow(brightness / 2047.0 * 430.0 / 600.0, 0.455))):
-            (255 * (1.0 - pow(brightness / 1605.0, 0.455)))); 
+Return<int32_t> FingerprintInscreen::getDimAmount(int32_t /* brightness */) {
+    return 0; 
 }
 
 Return<bool> FingerprintInscreen::shouldBoostBrightness() {
