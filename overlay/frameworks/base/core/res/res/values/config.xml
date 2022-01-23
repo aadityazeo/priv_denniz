@@ -49,6 +49,9 @@
     <!-- Whether Hearing Aid profile is supported -->
     <bool name="config_hearing_aid_profile_supported">true</bool>
 
+    <!-- Shows the required view for in-display fingerprint -->
+    <bool name="config_supportsInDisplayFingerprint">true</bool>
+
     <!-- Power Management: Specifies whether to decouple the auto-suspend state of the
          device from the display on/off state.
          When false, autosuspend_disable() will be called before the display is turned on
