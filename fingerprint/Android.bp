@@ -1,7 +1,8 @@
 cc_binary {
-    name: "android.hardware.biometrics.fingerprint@2.1-service.oplus_denniz",
+    name: "android.hardware.biometrics.fingerprint@2.1-service.denniz",
     defaults: ["hidl_defaults"],
-    init_rc: ["android.hardware.biometrics.fingerprint@2.1-service.oplus_denniz.rc"],
+    init_rc: ["android.hardware.biometrics.fingerprint@2.1-service.denniz.rc"],
+    vintf_fragments: ["android.hardware.biometrics.fingerprint@2.1-service.denniz.xml"],
     relative_install_path: "hw",
     srcs: [
         "BiometricsFingerprint.cpp",
