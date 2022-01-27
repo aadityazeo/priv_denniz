@@ -121,6 +121,10 @@ PRODUCT_PACKAGES += \
     com.android.ims.rcsmanager \
     PresencePolling
 
+# Recovery
+PRODUCT_PACKAGES += \
+    init.recovery.mt6893.rc
+
 # Sensors
 PRODUCT_PACKAGES += \
     android.hardware.sensors@2.0-service.oneplus_denniz
