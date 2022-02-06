@@ -1,0 +1,6 @@
+ro.rom.featrue=allnet
+ro.csc.spotify.music.referrerid=oneplus-mobile-global
+ro.csc.spotify.music.partnerid=oneplus-mobile-global
+persist.vendor.engineer.hide.log=6996
+persist.vendor.engineer.hide.warn=6776
+ro.product.bootreg.disable.command=true
