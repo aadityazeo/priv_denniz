@@ -21,7 +21,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import org.lineageos.internal.util.FileUtils;
+import com.oneplusparts.FileUtils;
 
 import androidx.preference.PreferenceManager;
 
@@ -77,6 +77,8 @@ public class Startup extends BroadcastReceiver {
         if (enabled) {
             Utils.startService(context, HBMService.class);
         }
+        DeviceSettings.restoreSliderStates(context);
+        VibratorStrengthPreference.restore(context);
     }
 
     private boolean hasRestoredTunable(Context context) {
@@ -87,14 +89,5 @@ public class Startup extends BroadcastReceiver {
     private void setRestoredTunable(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         preferences.edit().putBoolean(ONE_TIME_TUNABLE_RESTORE, true).apply();
-    }
-    
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        final String action = intent.getAction();
-        if (lineageos.content.Intent.ACTION_INITIALIZE_LINEAGE_HARDWARE.equals(action)) {
-            DeviceSettings.restoreSliderStates(context);
-            DeviceSettings.restoreVibStrengthSetting(context);
-        }
-    }
+    }    
 }

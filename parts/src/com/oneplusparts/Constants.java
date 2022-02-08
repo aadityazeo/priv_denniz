@@ -49,8 +49,8 @@ public class Constants {
     public static final String NOTIF_SLIDER_FOR_RINGER = "5";
     public static final String NOTIF_SLIDER_FOR_NOTIFICATION_RINGER = "6";
 
-    public static final String ACTION_UPDATE_SLIDER_POSITION
-            = "com.oneplusparts.UPDATE_SLIDER_POSITION";
+    public static final String ACTION_UPDATE_SLIDER_POSITION = "com.oneplusparts.UPDATE_SLIDER_POSITION";
+    public static final String ACTION_UPDATE_SLIDER_SETTINGS = "com.oneplusparts.UPDATE_SLIDER_SETTINGS";
     public static final String EXTRA_SLIDER_POSITION = "position";
     public static final String EXTRA_SLIDER_POSITION_VALUE = "position_value";
 

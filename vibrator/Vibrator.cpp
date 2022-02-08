@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2018-2021, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -34,10 +34,7 @@
 #include <inttypes.h>
 #include <linux/input.h>
 #include <log/log.h>
-
 #include <map>
-
-
 #include <string.h>
 #include <sys/ioctl.h>
 #include <thread>
@@ -56,7 +53,15 @@ namespace vibrator {
 #define MEDIUM_MAGNITUDE        0x5fff
 #define LIGHT_MAGNITUDE         0x3fff
 #define INVALID_VALUE           -1
-#define CUSTOM_DATA_LEN    3
+#define CUSTOM_DATA_LEN         3
+#define NAME_BUF_SIZE           32
+
+#define MSM_CPU_LAHAINA         415
+#define APQ_CPU_LAHAINA         439
+#define MSM_CPU_SHIMA           450
+#define MSM_CPU_SM8325          501
+#define APQ_CPU_SM8325P         502
+#define MSM_CPU_YUPIK           475
 
 static const char ACTIVATE_PATH[] = "/sys/class/leds/vibrator/activate";
 static const char BRIGHTNESS_PATH[] = "/sys/class/leds/vibrator/brightness";
@@ -71,38 +76,37 @@ static const char VMAX_PATH[] = "/sys/class/leds/vibrator/vmax";
 
 static const char LED_DEVICE[] = "/sys/class/leds/vibrator";
 
-
 static std::map<Effect, std::vector<std::pair<std::string, std::string>>> LED_EFFECTS{
     { Effect::CLICK, {
         { IGNORE_STORE_PATH, "0" },
-        { DURATION_PATH, "60" },
-        { VMAX_PATH, "0x1f" },
-        { GAIN_PATH, "0x96" },
-        { SEQ_PATH, "0x00 0x03" },
+        { DURATION_PATH, "50" },
+        { VMAX_PATH, "0x18" },
+        { GAIN_PATH, "0x80" },
+        { SEQ_PATH, "0x00 0x02" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
     }},
     { Effect::DOUBLE_CLICK, {
         { IGNORE_STORE_PATH, "0" },
-        { DURATION_PATH, "80" },
-        { VMAX_PATH, "0x1f" },
-        { GAIN_PATH, "0x96" },
-        { SEQ_PATH, "0x00 0x03" },
+        { DURATION_PATH, "53" },
+        { VMAX_PATH, "0x18" },
+        { GAIN_PATH, "0x80" },
+        { SEQ_PATH, "0x00 0x09" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
         { "SLEEP", "150" },
         { IGNORE_STORE_PATH, "0" },
-        { DURATION_PATH, "75" },
-        { VMAX_PATH, "0x1f" },
-        { GAIN_PATH, "0x96" },
-        { SEQ_PATH, "0x00 0x03" },
+        { DURATION_PATH, "53" },
+        { VMAX_PATH, "0x18" },
+        { GAIN_PATH, "0x80" },
+        { SEQ_PATH, "0x00 0x09" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
     }},
     { Effect::TICK, {
         { IGNORE_STORE_PATH, "0" },
-        { DURATION_PATH, "30" },
-        { VMAX_PATH, "0x1f" },
+        { DURATION_PATH, "70" },
+        { VMAX_PATH, "0x18" },
         { GAIN_PATH, "0x80" },
         { SEQ_PATH, "0x00 0x03" },
         { LOOP_PATH, "0x00 0x00" },
@@ -110,42 +114,40 @@ static std::map<Effect, std::vector<std::pair<std::string, std::string>>> LED_EF
     }},
     { Effect::THUD, {
         { IGNORE_STORE_PATH, "0" },
-        { DURATION_PATH, "60" },
-        { VMAX_PATH, "0x1f" },
-        { GAIN_PATH, "0x96" },
+        { DURATION_PATH, "80" },
+        { VMAX_PATH, "0x18" },
+        { GAIN_PATH, "0x80" },
         { SEQ_PATH, "0x00 0x03" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
     }},
     { Effect::POP, {
         { IGNORE_STORE_PATH, "0" },
-        { DURATION_PATH, "60" },
-        { VMAX_PATH, "0x1f" },
-        { GAIN_PATH, "0x96" },
+        { DURATION_PATH, "53" },
+        { VMAX_PATH, "0x18" },
+        { GAIN_PATH, "0x80" },
         { SEQ_PATH, "0x00 0x03" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
     }},
     { Effect::HEAVY_CLICK, {
         { IGNORE_STORE_PATH, "0" },
-        { DURATION_PATH, "100" },
-        { VMAX_PATH, "0x1f" },
-        { GAIN_PATH, "0x96" },
-        { SEQ_PATH, "0x00 0x03" },
+        { DURATION_PATH, "50" },
+        { VMAX_PATH, "0x18" },
+        { GAIN_PATH, "0x80" },
+        { SEQ_PATH, "0x00 0x09" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
     }}
 };
 
-<<<<<<< HEAD
-=======
 static std::vector<std::vector<std::pair<std::string, std::string>>> VIBRATOR_CONSTANTS{
     {   // 1ms - 80ms
         { IGNORE_STORE_PATH, "0\n" },
         { DURATION_PATH, "0" },         // placeholder
         { SEQ_PATH, "0x00 0x01" },
         { GAIN_PATH, "0" },             // placeholder
-        { VMAX_PATH, "0x1f" },
+        { VMAX_PATH, "0x18" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
     },
@@ -154,7 +156,7 @@ static std::vector<std::vector<std::pair<std::string, std::string>>> VIBRATOR_CO
         { DURATION_PATH, "0" },         // placeholder
         { SEQ_PATH, "0x00 0x02" },
         { GAIN_PATH, "0" },             // placeholder
-        { VMAX_PATH, "0x1f" },
+        { VMAX_PATH, "0x18" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
     },
@@ -163,19 +165,18 @@ static std::vector<std::vector<std::pair<std::string, std::string>>> VIBRATOR_CO
         { DURATION_PATH, "0" },         // placeholder
         { SEQ_PATH, "0x00 0x03" },
         { GAIN_PATH, "0" },             // placeholder
-        { VMAX_PATH, "0x1f" },
+        { VMAX_PATH, "0x18" },
         { LOOP_PATH, "0x00 0x00" },
         { BRIGHTNESS_PATH, "1" },
     },
     {   // 100ms+
         { IGNORE_STORE_PATH, "0\n" },
         { DURATION_PATH, "0" },         // placeholder
-        { VMAX_PATH, "0x1f" },
+        { VMAX_PATH, "0x18" },
         { GAIN_PATH, "0x80" },
         { ACTIVATE_PATH, "1" },
     }
 };
->>>>>>> 6cf7dca... sm8250-common: Fix vibration effects and vibration based on duration
 
 InputFFDevice::InputFFDevice()
 {
@@ -185,6 +186,7 @@ InputFFDevice::InputFFDevice()
     uint8_t ffBitmask[FF_CNT / 8];
     char devicename[PATH_MAX];
     const char *INPUT_DIR = "/dev/input/";
+    char name[NAME_BUF_SIZE];
     int fd, ret;
     int soc = property_get_int32("ro.vendor.qti.soc_id", -1);
 
@@ -216,6 +218,20 @@ InputFFDevice::InputFFDevice()
             continue;
         }
 
+        ret = TEMP_FAILURE_RETRY(ioctl(fd, EVIOCGNAME(sizeof(name)), name));
+        if (ret == -1) {
+            ALOGE("get input device name %s failed, errno = %d\n", devicename, errno);
+            close(fd);
+            continue;
+        }
+
+        if (strcmp(name, "qcom-hv-haptics") && strcmp(name, "qti-haptics")) {
+            ALOGD("not a qcom/qti haptics device\n");
+            close(fd);
+            continue;
+        }
+
+        ALOGI("%s is detected at %s\n", name, devicename);
         ret = TEMP_FAILURE_RETRY(ioctl(fd, EVIOCGBIT(EV_FF, sizeof(ffBitmask)), ffBitmask));
         if (ret == -1) {
             ALOGE("ioctl failed, errno = %d", errno);
@@ -235,10 +251,18 @@ InputFFDevice::InputFFDevice()
                 fscanf(fp, "%u", &soc);
                 fclose(fp);
             }
-            if (soc == 400 || soc == 415) {
+            switch (soc) {
+            case MSM_CPU_LAHAINA:
+            case APQ_CPU_LAHAINA:
+            case MSM_CPU_SHIMA:
+            case MSM_CPU_SM8325:
+            case APQ_CPU_SM8325P:
+            case MSM_CPU_YUPIK:
                 mSupportExternalControl = true;
-            } else {
+                break;
+            default:
                 mSupportExternalControl = false;
+                break;
             }
             break;
         }
@@ -563,7 +587,6 @@ ndk::ScopedAStatus Vibrator::perform(Effect effect, EffectStrength es, const std
     long playLengthMs;
     int ret;
 
-
     ALOGD("Vibrator perform effect %d", effect);
 
     if (ledVib.mDetected) {
@@ -595,23 +618,6 @@ ndk::ScopedAStatus Vibrator::perform(Effect effect, EffectStrength es, const std
             return ndk::ScopedAStatus(AStatus_fromExceptionCode(EX_SERVICE_SPECIFIC));
     }
 
-    if (ledVib.mDetected)
-        return ndk::ScopedAStatus(AStatus_fromExceptionCode(EX_UNSUPPORTED_OPERATION));
-
-    ALOGD("Vibrator perform effect %d", effect);
-
-    if (effect < Effect::CLICK ||
-            effect > Effect::HEAVY_CLICK)
-        return ndk::ScopedAStatus(AStatus_fromExceptionCode(EX_UNSUPPORTED_OPERATION));
-
-    if (es != EffectStrength::LIGHT && es != EffectStrength::MEDIUM && es != EffectStrength::STRONG)
-        return ndk::ScopedAStatus(AStatus_fromExceptionCode(EX_UNSUPPORTED_OPERATION));
-
-    ret = ff.playEffect((static_cast<int>(effect)), es, &playLengthMs);
-    if (ret != 0)
-        return ndk::ScopedAStatus(AStatus_fromExceptionCode(EX_SERVICE_SPECIFIC));
-
-
     if (callback != nullptr) {
         std::thread([=] {
             ALOGD("Starting perform on another thread");
@@ -626,26 +632,8 @@ ndk::ScopedAStatus Vibrator::perform(Effect effect, EffectStrength es, const std
 }
 
 ndk::ScopedAStatus Vibrator::getSupportedEffects(std::vector<Effect>* _aidl_return) {
-<<<<<<< HEAD
-
-    if (ledVib.mDetected) {
-        *_aidl_return = {Effect::CLICK, Effect::DOUBLE_CLICK, Effect::TICK, Effect::POP,
-                         Effect::HEAVY_CLICK};
-    } else {
-        *_aidl_return = {Effect::CLICK, Effect::DOUBLE_CLICK, Effect::TICK, Effect::THUD,
-                         Effect::POP, Effect::HEAVY_CLICK};
-    }
-=======
-    if (ledVib.mDetected)
-        return ndk::ScopedAStatus::ok();
-
-    *_aidl_return = {Effect::CLICK, Effect::DOUBLE_CLICK, Effect::TICK, Effect::THUD,
-                     Effect::POP, Effect::HEAVY_CLICK};
-
-=======
     *_aidl_return = {Effect::CLICK, Effect::DOUBLE_CLICK, Effect::TICK, Effect::THUD,
             Effect::POP, Effect::HEAVY_CLICK};
->>>>>>> 11f0f72... sm8250-common: vibrator: Update vibration effects
 
     return ndk::ScopedAStatus::ok();
 }

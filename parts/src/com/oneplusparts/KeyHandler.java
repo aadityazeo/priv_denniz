@@ -46,14 +46,10 @@ import com.oneplusparts.slider.RingerController;
 import com.oneplusparts.slider.NotificationRingerController;
 
 
-import vendor.oneplus.hardware.camera.V1_0.IOnePlusCameraProvider;
-
 public class KeyHandler implements DeviceKeyHandler {
     private static final String TAG = KeyHandler.class.getSimpleName();
     private static final boolean DEBUG = false;
     private final Context mContext;
-    private ClientPackageNameObserver mClientObserver;
-    private IOnePlusCameraProvider mProvider;
     private final NotificationController mNotificationController;
     private final FlashlightController mFlashlightController;
     private final BrightnessController mBrightnessController;
@@ -143,19 +139,5 @@ public class KeyHandler implements DeviceKeyHandler {
         mSliderController.processEvent(mContext, scanCode);
 
         return null;
-    }
-
-    private void onDisplayOn() {
-        if (mClientObserver == null) {
-            mClientObserver = new ClientPackageNameObserver(CLIENT_PACKAGE_PATH);
-            mClientObserver.startWatching();
-        }
-    }
-
-    private void onDisplayOff() {
-        if (mClientObserver != null) {
-            mClientObserver.stopWatching();
-            mClientObserver = null;
-        }
     }
 }

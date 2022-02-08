@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.display.DisplayManager;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.util.Log;
 import android.view.Display;
 import android.content.Context;
@@ -49,18 +48,19 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 
 import com.oneplusparts.Constants;
-import org.lineageos.internal.util.FileUtils;
+import com.oneplusparts.FileUtils;
+import com.oneplusparts.R;
 
 public class DeviceSettings extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener {
+    
+    private static final String TAG = DeviceSettings.class.getSimpleName();
 
     public static final String KEY_SRGB_SWITCH = "srgb";
     public static final String KEY_HBM_SWITCH = "hbm";
     public static final String KEY_DC_SWITCH = "dc";
     public static final String KEY_OTG_SWITCH = "otg";
     public static final String KEY_PERF_PROFILE = "perf_profile";
-	public static final String KEY_VIBRATION_STRENGTH = "vibration_strength";
-	public static final String VIB_STRENGTH_SYSTEM_PROPERTY = "persist.vib_strength";
     public static final String PERF_PROFILE_SYSTEM_PROPERTY = "persist.perf_profile";
     public static final String KEY_GAME_SWITCH = "game";
     public static final String KEY_CHARGING_SWITCH = "smart_charging";
@@ -101,26 +101,18 @@ public class DeviceSettings extends PreferenceFragment
     private SecureSettingListPreference mCABC;
 	private SecureSettingListPreference mPerfProfile;
 	private static final String KEY_USB2_SWITCH = "usb2_fast_charge";
-    private static final String KEY_VIBSTRENGTH = "vib_strength";
-    private static final String FILE_LEVEL = "/sys/devices/platform/soc/11cb1000.i2c9/i2c-9/9-005a/leds/vibrator/level";
-    private static final long testVibrationPattern[] = {0,5};
-    private static final String DEFAULT = "3";
+    public static final String KEY_VIBSTRENGTH = "vib_strength"; 
     private ListPreference mTopKeyPref;
     private ListPreference mMiddleKeyPref;
     private ListPreference mBottomKeyPref;  
-    private CustomSeekBarPreference mVibratorStrengthPreference;
-    private Vibrator mVibrator;
+    private VibratorStrengthPreference mVibratorStrength;
 
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        prefs.edit().putString("ProductName", ProductName).apply();
-
         addPreferencesFromResource(R.xml.main);
-        
-        mVibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDCModeSwitch = findPreference(KEY_DC_SWITCH);
         mDCModeSwitch.setEnabled(DCModeSwitch.isSupported());
@@ -195,6 +187,15 @@ public class DeviceSettings extends PreferenceFragment
         mDT2WModeSwitch.setChecked(DT2WModeSwitch.isCurrentlyEnabled(this.getContext()));
         mDT2WModeSwitch.setOnPreferenceChangeListener(new DT2WModeSwitch());
         
+          // Slider Preferences
+        initNotificationSliderPreference();
+        
+          // Vibrator
+        mVibratorStrength = (VibratorStrengthPreference) findPreference(KEY_VIBSTRENGTH);
+        if (mVibratorStrength != null) {
+            mVibratorStrength.setEnabled(VibratorStrengthPreference.isSupported());
+        }
+
        // Few checks to enable/disable options when activity is launched
         if ((prefs.getBoolean("refresh_rate_90", false) && prefs.getBoolean("refresh_rate_90Forced", false))) {
             mRefreshRate60.setEnabled(false);
@@ -210,19 +211,7 @@ public class DeviceSettings extends PreferenceFragment
         } catch (Exception e) {
             Log.d("DeviceSettings", e.toString());
         }
-    }
-
-        mVibratorStrengthPreference =  (CustomSeekBarPreference) findPreference(KEY_VIBSTRENGTH);
-        if (Utils.fileWritable(FILE_LEVEL)) {
-            mVibratorStrengthPreference.setValue(sharedPrefs.getInt(KEY_VIBSTRENGTH,
-                Integer.parseInt(Utils.getFileValue(FILE_LEVEL, DEFAULT))));
-            mVibratorStrengthPreference.setOnPreferenceChangeListener(this);
-        } else {
-            mVibratorStrengthPreference.setEnabled(false);
-        }
-
-        initNotificationSliderPreference();
-    }
+   }
 
     private void initNotificationSliderPreference() {
         registerPreferenceListener(Constants.NOTIF_SLIDER_USAGE_KEY);
@@ -262,21 +251,53 @@ public class DeviceSettings extends PreferenceFragment
         if (preference == mChargingSpeed) {
             mChargingSpeed.setValue((String) newValue);
             mChargingSpeed.setSummary(mChargingSpeed.getEntry());
+            return true;
         }
 
         if (preference == mCABC) {
             mCABC.setValue((String) newValue);
             mCABC.setSummary(mCABC.getEntry());
             Utils.setStringProp(CABC_SYSTEM_PROPERTY, (String) newValue);
+            return true;
         }
 		if (preference == mPerfProfile) {
             mPerfProfile.setValue((String) newValue);
             mPerfProfile.setSummary(mPerfProfile.getEntry());
             Utils.setStringProp(PERF_PROFILE_SYSTEM_PROPERTY, (String) newValue);
+            return true;
         }
-        return true;
-    }
+        
+        String key = preference.getKey();
+        switch (key) {
+            case Constants.NOTIF_SLIDER_USAGE_KEY:
+                return handleSliderUsageChange((String) newValue) &&
+                        handleSliderUsageDefaultsChange((String) newValue) &&
+                        notifySliderUsageChange((String) newValue);
+            case Constants.NOTIF_SLIDER_ACTION_TOP_KEY:
+                return notifySliderActionChange(0, (String) newValue);
+            case Constants.NOTIF_SLIDER_ACTION_MIDDLE_KEY:
+                return notifySliderActionChange(1, (String) newValue);
+            case Constants.NOTIF_SLIDER_ACTION_BOTTOM_KEY:
+                return notifySliderActionChange(2, (String) newValue);
+            default:
+                break;
+        }
 
+        String node = Constants.sBooleanNodePreferenceMap.get(key);
+        if (!TextUtils.isEmpty(node) && FileUtils.fileWritable(node)) {
+            Boolean value = (Boolean) newValue;
+            FileUtils.writeValue(node, value ? "1" : "0");
+            return true;
+        }
+        node = Constants.sStringNodePreferenceMap.get(key);
+        if (!TextUtils.isEmpty(node) && FileUtils.fileWritable(node)) {
+            FileUtils.writeValue(node, (String) newValue);
+            return true;
+        }
+        
+        return false;
+    }
+    
     // Remove Charging Speed preference if cool_down node is unavailable
     private void isCoolDownAvailable() {
         mPreferenceCategory = (PreferenceCategory) findPreference(KEY_CATEGORY_CHARGING);
@@ -374,46 +395,6 @@ public class DeviceSettings extends PreferenceFragment
             mPreferenceCategory.removePreference(findPreference(KEY_SRGB_SWITCH));
             prefs.edit().putBoolean("sRGB_DeviceMatched", false).apply();
         } else prefs.edit().putBoolean("sRGB_DeviceMatched", true).apply();
-              
-               
-            if (preference == mVibratorStrengthPreference) {
-            int value = Integer.parseInt(newValue.toString());
-            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-            sharedPrefs.edit().putInt(KEY_VIBSTRENGTH, value).commit();
-            Utils.writeValue(FILE_LEVEL, String.valueOf(value));
-            mVibrator.vibrate(testVibrationPattern, -1);
-            return true;
-        }
-
-        String key = preference.getKey();
-        switch (key) {
-            case Constants.NOTIF_SLIDER_USAGE_KEY:
-                return handleSliderUsageChange((String) newValue) &&
-                        handleSliderUsageDefaultsChange((String) newValue) &&
-                        notifySliderUsageChange((String) newValue);
-            case Constants.NOTIF_SLIDER_ACTION_TOP_KEY:
-                return notifySliderActionChange(0, (String) newValue);
-            case Constants.NOTIF_SLIDER_ACTION_MIDDLE_KEY:
-                return notifySliderActionChange(1, (String) newValue);
-            case Constants.NOTIF_SLIDER_ACTION_BOTTOM_KEY:
-                return notifySliderActionChange(2, (String) newValue);
-            default:
-                break;
-        }
-
-        String node = Constants.sBooleanNodePreferenceMap.get(key);
-        if (!TextUtils.isEmpty(node) && FileUtils.isFileWritable(node)) {
-            Boolean value = (Boolean) newValue;
-            FileUtils.writeLine(node, value ? "1" : "0");
-            return true;
-        }
-        node = Constants.sStringNodePreferenceMap.get(key);
-        if (!TextUtils.isEmpty(node) && FileUtils.isFileWritable(node)) {
-            FileUtils.writeLine(node, (String) newValue);
-            return true;
-        }
-
-        return false;
     }
     
     @Override
@@ -630,15 +611,6 @@ public class DeviceSettings extends PreferenceFragment
         });
     }
 
-    public static void restoreVibStrengthSetting(Context context) {
-        if (Utils.fileWritable(FILE_LEVEL)) {
-            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-            int value = sharedPrefs.getInt(KEY_VIBSTRENGTH,
-                Integer.parseInt(Utils.getFileValue(FILE_LEVEL, DEFAULT)));
-            Utils.writeValue(FILE_LEVEL, String.valueOf(value));
-        }
-    }
-
     private static int getDefaultResIdForUsage(String usage) {
         switch (usage) {
             case Constants.NOTIF_SLIDER_FOR_NOTIFICATION:
@@ -669,5 +641,3 @@ public class DeviceSettings extends PreferenceFragment
         return super.onOptionsItemSelected(item);
     }
 }
-
-   

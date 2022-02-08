@@ -53,15 +53,13 @@ PRODUCT_PACKAGES += \
 
 # Fingerprint
 PRODUCT_PACKAGES += \
-   android.hardware.biometrics.fingerprint@2.3-service.denniz \
-    lineage.biometrics.fingerprint.inscreen@1.0-service.denniz
+    android.hardware.biometrics.fingerprint@2.3-service.denniz \
+ vendor.oplus.hardware.biometrics.fingerprint@2.1
+
 
 PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.fingerprint.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/android.hardware.fingerprint.xml
-
-# Lineage Specific perms
-PRODUCT_COPY_FILES += \
-    vendor/lineage/config/permissions/vendor.lineage.biometrics.fingerprint.inscreen.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/vendor.lineage.biometrics.fingerprint.inscreen.xml
+    frameworks/native/data/etc/android.hardware.fingerprint.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/android.hardware.fingerprint.xml   
+ 
 
 # Init
 PRODUCT_PACKAGES += \
@@ -157,6 +155,29 @@ PRODUCT_PACKAGES += \
     TetheringConfigOverlay \
     WifiOverlay
 
-#vibrator    
+# Vibrator    
     PRODUCT_PACKAGES += \
     vendor.qti.hardware.vibrator.service.oneplus_kona
+    
+# OnePlusParts
+PRODUCT_PACKAGES += \
+    OnePlusParts \
+ parts.rc  
+   
+# Power
+PRODUCT_PACKAGES += \
+    android.hardware.power@1.0 \
+    android.hardware.power@1.0.vendor \
+    android.hardware.power@1.1 \
+    android.hardware.power@1.1.vendor \
+    android.hardware.power@1.2 \
+    android.hardware.power@1.2.vendor \
+    android.hardware.power@1.3 \
+    android.hardware.power@1.3.vendor
+    
+# Health
+PRODUCT_PACKAGES += \
+    android.hardware.health@2.0 \
+    android.hardware.health@2.1-impl \
+    android.hardware.health@2.1-impl.recovery \
+    android.hardware.health@2.1-service

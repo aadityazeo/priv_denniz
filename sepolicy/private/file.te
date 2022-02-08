@@ -1,5 +1,6 @@
 # Alert Slider
 type proc_tristatekey, fs_type, proc_type;
+type proc_tp, fs_type, proc_type;
 
 # Nodes
 type sysfs_fod, sysfs_type, fs_type;

@@ -33,7 +33,7 @@
         manifest_gnss.xml
         manifest.xml
 -->
-<manifest version="2.0" type="device" target-level="5">
+<manifest version="2.0" type="device" target-level="4">
     <hal format="hidl">
         <name>android.hardware.audio</name>
         <transport>hwbinder</transport>
@@ -241,16 +241,6 @@
         </interface>
         <fqname>@1.2::ISecureElement/SIM1</fqname>
         <fqname>@1.2::ISecureElement/SIM2</fqname>
-    </hal>
-    <hal format="hidl">
-        <name>android.hardware.sensors</name>
-        <transport>hwbinder</transport>
-        <version>2.0</version>
-        <interface>
-            <name>ISensors</name>
-            <instance>default</instance>
-        </interface>
-        <fqname>@2.0::ISensors/default</fqname>
     </hal>
     <hal format="hidl">
         <name>android.hardware.soundtrigger</name>
@@ -721,8 +711,13 @@
         </interface>
         <fqname>@1.0::ITui/default</fqname>
     </hal>
-    <sepolicy>
-        <version>30.0</version>
-    </sepolicy>
-    <kernel target-level="5"/>
+    <hal format="hidl">
+        <name>vendor.qti.hardware.soter</name>
+        <transport>hwbinder</transport>
+        <version>1.0</version>
+        <interface>
+            <name>ISoter</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
 </manifest>

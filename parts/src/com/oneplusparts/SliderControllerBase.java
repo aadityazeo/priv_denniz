@@ -22,9 +22,6 @@ import android.os.UserHandle;
 import android.os.Vibrator;
 import android.util.Log;
 
-import lineageos.providers.LineageSettings;
-
-import org.lineageos.internal.util.FileUtils;
 import com.oneplusparts.Constants;
 
 public abstract class SliderControllerBase {
@@ -37,16 +34,10 @@ public abstract class SliderControllerBase {
 
     protected final Context mContext;
 
-    private Vibrator mVibrator;
-
     private int[] mActions = null;
 
     public SliderControllerBase(Context context) {
         mContext = context;
-        mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        if (mVibrator == null || !mVibrator.hasVibrator()) {
-            mVibrator = null;
-        }
     }
 
     public final void update(int[] actions) {
@@ -84,10 +75,6 @@ public abstract class SliderControllerBase {
                 break;
         }
 
-        if (result > 0) {
-            doHapticFeedback();
-        }
-
         return result;
     }
 
@@ -117,17 +104,6 @@ public abstract class SliderControllerBase {
             processAction(mActions[state - 1]);
         } catch (Exception e) {
             Log.e(TAG, "Failed to restore slider state", e);
-        }
-    }
-
-    private void doHapticFeedback() {
-        if (mVibrator == null) {
-            return;
-        }
-        boolean enabled = LineageSettings.System.getIntForUser(mContext.getContentResolver(),
-                LineageSettings.System.TOUCHSCREEN_GESTURE_HAPTIC_FEEDBACK, 1, UserHandle.USER_CURRENT) != 0;
-        if (enabled) {
-            mVibrator.vibrate(50);
         }
     }
 

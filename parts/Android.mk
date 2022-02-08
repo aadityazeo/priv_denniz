@@ -1,4 +1,3 @@
-#
 # Copyright (C) 2013 The CyanogenMod Project
 # Copyright (C) 2017 The LineageOS Project
 #
@@ -13,8 +12,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
@@ -29,9 +26,6 @@ LOCAL_USE_AAPT2 := true
 LOCAL_STATIC_ANDROID_LIBRARIES := \
     androidx.core_core \
     androidx.preference_preference
-    
-LOCAL_STATIC_JAVA_LIBRARIES := \
-    org.lineageos.platform.internal 
 
 LOCAL_RESOURCE_DIR := \
     $(LOCAL_PATH)/res \
