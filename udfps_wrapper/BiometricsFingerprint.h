@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The LineageOS Project
+ * Copyright (C) 2017 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-#pragma once
+#ifndef ANDROID_HARDWARE_BIOMETRICS_FINGERPRINT_V2_3_BIOMETRICSFINGERPRINT_H
+#define ANDROID_HARDWARE_BIOMETRICS_FINGERPRINT_V2_3_BIOMETRICSFINGERPRINT_H
 
-#include <android/hardware/biometrics/fingerprint/2.3/IBiometricsFingerprint.h>
-#include <vendor/oplus/hardware/biometrics/fingerprint/2.1/IBiometricsFingerprint.h>
+#include <log/log.h>
+#include <android/log.h>
+#include <hardware/hardware.h>
+#include <hardware/fingerprint.h>
 #include <hidl/MQDescriptor.h>
 #include <hidl/Status.h>
+#include <android/hardware/biometrics/fingerprint/2.3/IBiometricsFingerprint.h>
+#include <vendor/oplus/hardware/biometrics/fingerprint/2.1/IBiometricsFingerprint.h>
 
 namespace android {
 namespace hardware {
@@ -28,20 +33,22 @@ namespace fingerprint {
 namespace V2_3 {
 namespace implementation {
 
-using IBiometricsFingerprint_2_1 = ::android::hardware::biometrics::fingerprint::V2_1::IBiometricsFingerprint;
+//using ::android::hardware::biometrics::fingerprint::V2_3::IBiometricsFingerprint;
 using ::android::hardware::biometrics::fingerprint::V2_1::IBiometricsFingerprintClientCallback;
 using ::android::hardware::biometrics::fingerprint::V2_1::RequestStatus;
-using ::android::hardware::hidl_array;
-using ::android::hardware::hidl_memory;
-using ::android::hardware::hidl_string;
-using ::android::hardware::hidl_vec;
 using ::android::hardware::Return;
 using ::android::hardware::Void;
+using ::android::hardware::hidl_vec;
+using ::android::hardware::hidl_string;
+using ::android::OK;
 using ::android::sp;
+using ::android::status_t;
 
 struct BiometricsFingerprint : public IBiometricsFingerprint {
+public:
     BiometricsFingerprint();
-    // Methods from ::V2_1::IBiometricsFingerprint follow.
+
+    // Methods from ::android::hardware::biometrics::fingerprint::V2_1::IBiometricsFingerprint follow.
     Return<uint64_t> setNotify(const sp<IBiometricsFingerprintClientCallback>& clientCallback) override;
     Return<uint64_t> preEnroll() override;
     Return<RequestStatus> enroll(const hidl_array<uint8_t, 69>& hat, uint32_t gid, uint32_t timeoutSec) override;
@@ -57,23 +64,22 @@ struct BiometricsFingerprint : public IBiometricsFingerprint {
     Return<bool> isUdfps(uint32_t sensorId) override;
     Return<void> onFingerDown(uint32_t x, uint32_t y, float minor, float major) override;
     Return<void> onFingerUp() override;
-	Return<void> onShowUdfpsOverlay() override;                                                                       
-	Return<void> onHideUdfpsOverlay() override;
 
-    // our own functions
-    void setFingerprintScreenState(const bool on);
-    void setFingerprintScreenStateOff();
+    Return<void> onShowUdfpsOverlay() override;
+    Return<void> onHideUdfpsOverlay() override;
 
 private:
-    bool isEnrolling;
     sp<vendor::oplus::hardware::biometrics::fingerprint::V2_1::IBiometricsFingerprint> mOplusBiometricsFingerprint;
     sp<vendor::oplus::hardware::biometrics::fingerprint::V2_1::IBiometricsFingerprintClientCallback> mOplusClientCallback;
     static Return<RequestStatus> OplusToAOSPRequestStatus(vendor::oplus::hardware::biometrics::fingerprint::V2_1::RequestStatus req);
+    Return<bool> isDozeMode();
 };
 
 }  // namespace implementation
-}  // namespace V2_2
+}  // namespace V2_3
 }  // namespace fingerprint
 }  // namespace biometrics
 }  // namespace hardware
 }  // namespace android
+
+#endif  // ANDROID_HARDWARE_BIOMETRICS_FINGERPRINT_V2_3_BIOMETRICSFINGERPRINT_H
