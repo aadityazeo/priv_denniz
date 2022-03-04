@@ -10,8 +10,8 @@ on boot
     chmod 0200 /sys/bus/platform/devices/soc/soc\:fpc_interrupt/clk_enable
     chmod 0200 /sys/bus/platform/devices/soc/soc\:fpc_interrupt/wakelock_enable
     chmod 0600 /sys/bus/platform/devices/soc/soc\:fpc_interrupt/irq
-    chmod 0660 /sys/kernel/oppo_display/hbm
-    chown system system /sys/kernel/oppo_display/hbm
+    chmod 0660 /sys/kernel/oplus_display/hbm
+    chown system system /sys/kernel/oplus_display/hbm
 	
     #for egis fp
     chown system system /dev/esfp0
@@ -47,7 +47,7 @@ on post-fs-data
     chmod 0600 /sys/bus/platform/devices/fpc_interrupt/irq
     chmod 0660 /sys/bus/platform/devices/fpc_interrupt/irq_unexpected
 
-service fps_hal.RMX3031 /system/bin/hw/android.hardware.biometrics.fingerprint@2.3-service.denniz
+service fps_hal.denniz /system/bin/hw/android.hardware.biometrics.fingerprint@2.3-service.denniz
     interface android.hardware.biometrics.fingerprint@2.1::IBiometricsFingerprint default
     interface android.hardware.biometrics.fingerprint@2.2::IBiometricsFingerprint default
     interface android.hardware.biometrics.fingerprint@2.3::IBiometricsFingerprint default
