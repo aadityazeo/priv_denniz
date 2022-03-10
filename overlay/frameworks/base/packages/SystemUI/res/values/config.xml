@@ -14,8 +14,12 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Doze: does this device support STATE_DOZE?  -->
-    <bool name="doze_display_state_supported">false</bool>
+    <bool name="doze_display_state_supported">true</bool>
 
     <!-- The radius of the enrollment progress bar, in dp -->
     <integer name="config_udfpsEnrollProgressBar" translatable="false">102</integer>
+
+    <!-- Allow devices override audio panel location to the left side -->
+    <bool name="config_audioPanelOnLeftSide">true</bool>
+
 </resources>
