@@ -21,20 +21,21 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 # Inherit from device makefile
 $(call inherit-product, device/oneplus/denniz/device.mk)
 
-# Inherit some common AEX stuff.
-$(call inherit-product, vendor/aosp/common.mk)
+# Inherit some common dot stuff.
+$(call inherit-product, vendor/dot/config/common.mk)
 
 # Device identifier. This must come after all inclusions.
-PRODUCT_NAME := aosp_denniz
+PRODUCT_NAME := dot_denniz
 PRODUCT_DEVICE := denniz
 PRODUCT_BRAND := oneplus
 PRODUCT_MODEL := OnePlus Nord 2 5G
 PRODUCT_MANUFACTURER := oneplus
-
+WITH_GMS := true
+WITH_GAPPS := true
 TARGET_BOOT_ANIMATION_RES := 1080
 
 # Build info
-BUILD_FINGERPRINT := "alps/vnd_oppo6893/oppo6893:11/RP1A.200720.011/mp2tc16sppr5V1:user/release-keys"
+BUILD_FINGERPRINT := "google/coral/coral:12/SP2A.220405.003/8210211:user/release-keys"
 PRODUCT_BUILD_PROP_OVERRIDES += \
     TARGET_DEVICE=denniz \
     PRODUCT_NAME=denniz \
